@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Persona Manager",
+  "version": "0.0.3",
+  "description": "Manage personas for Claude.ai",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://claude.ai/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "options_page": "options/options.html",
+  "icons": {
+    "128": "icons/icon128.png"
+  }
+}

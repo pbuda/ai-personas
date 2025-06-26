@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Persona Manager - Options</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Claude Persona Manager</h1>
+            <p>Manage your personas and settings</p>
+        </header>
+
+        <main>
+            <section class="personas-section">
+                <div class="section-header">
+                    <h2>Personas</h2>
+                    <div class="actions">
+                        <button id="add-persona-btn" class="btn-primary">Add Persona</button>
+                        <button id="import-btn" class="btn-secondary">Import</button>
+                        <button id="export-btn" class="btn-secondary">Export</button>
+                    </div>
+                </div>
+                
+                <div id="personas-list" class="personas-list">
+                    <!-- Personas will be populated here -->
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2>Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label for="open-new-tab">
+                            <input type="checkbox" id="open-new-tab">
+                            Open new conversations in new tab
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="auto-inject">
+                            <input type="checkbox" id="auto-inject">
+                            Automatically inject persona prompts
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="show-indicator">
+                            <input type="checkbox" id="show-indicator">
+                            Show active persona indicator
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="confirm-switch">
+                            <input type="checkbox" id="confirm-switch">
+                            Confirm before switching personas
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Persona Modal -->
+    <div id="persona-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Persona</h3>
+                <button id="close-modal" class="close-btn">&times;</button>
+            </div>
+            <form id="persona-form">
+                <div class="form-group">
+                    <label for="persona-name">Name *</label>
+                    <input type="text" id="persona-name" required maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="persona-description">Description</label>
+                    <input type="text" id="persona-description" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="persona-color">Color</label>
+                    <input type="color" id="persona-color" value="#3b82f6">
+                </div>
+                <div class="form-group">
+                    <label for="persona-prompt">Prompt *</label>
+                    <textarea id="persona-prompt" required rows="8" placeholder="Enter the persona prompt..."></textarea>
+                    <div class="char-count">
+                        <span id="prompt-char-count">0</span> / 2000 characters
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import Personas</h3>
+                <button id="close-import-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="import-content">
+                <p>Select a JSON file to import personas:</p>
+                <input type="file" id="import-file" accept=".json">
+                <div id="import-preview"></div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-import-btn" class="btn-secondary">Cancel</button>
+                    <button type="button" id="confirm-import-btn" class="btn-primary" disabled>Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Delete Persona</h3>
+                <button id="close-delete-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="delete-content">
+                <p>Are you sure you want to delete "<span id="delete-persona-name"></span>"?</p>
+                <p class="warning">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-delete-btn" class="btn-secondary">Cancel</button>
+                    <button type="button" id="confirm-delete-btn" class="btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../options.js"></script>
+</body>
+</html>

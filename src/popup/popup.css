@@ -1,0 +1,81 @@
+body {
+    width: 300px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  .popup-container {
+    padding: 16px;
+  }
+  
+  h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .persona-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .persona-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background: #f5f5f5;
+  }
+  
+  .persona-item:hover {
+    background: #e5e5e5;
+  }
+  
+  .persona-item.active {
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+  }
+  
+  .persona-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+  
+  .persona-info {
+    flex: 1;
+  }
+  
+  .persona-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  
+  .persona-desc {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .actions {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 12px;
+  }
+  
+  .btn-secondary {
+    width: 100%;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .btn-secondary:hover {
+    background: #f5f5f5;
+  }
