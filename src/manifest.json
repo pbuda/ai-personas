@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Claude Persona Manager",
-  "version": "0.0.3",
+  "name": "AI Personas",
+  "version": "0.1.3",
   "description": "Manage personas for Claude.ai",
   "permissions": ["storage", "tabs"],
   "host_permissions": ["https://claude.ai/*"],

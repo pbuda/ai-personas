@@ -8,6 +8,7 @@ class OptionsManager {
     autoInject: true,
     showActiveIndicator: true,
     confirmSwitch: true,
+    personalizedBackground: true,
   };
   private activePersonaId: string | null = null;
   private editingPersonaId: string | null = null;
@@ -46,7 +47,7 @@ class OptionsManager {
 
     document.getElementById("persona-prompt")?.addEventListener("input", (e) => this.updateCharCount(e));
 
-    ["open-new-tab", "auto-inject", "show-indicator", "confirm-switch"].forEach(id => {
+    ["open-new-tab", "auto-inject", "show-indicator", "confirm-switch", "personalized-background"].forEach(id => {
       document.getElementById(id)?.addEventListener("change", () => this.updateSettings());
     });
 
@@ -109,6 +110,7 @@ class OptionsManager {
     (document.getElementById("auto-inject") as HTMLInputElement).checked = this.settings.autoInject;
     (document.getElementById("show-indicator") as HTMLInputElement).checked = this.settings.showActiveIndicator;
     (document.getElementById("confirm-switch") as HTMLInputElement).checked = this.settings.confirmSwitch;
+    (document.getElementById("personalized-background") as HTMLInputElement).checked = this.settings.personalizedBackground;
   }
 
   private openPersonaModal(persona?: Persona) {
@@ -231,6 +233,7 @@ class OptionsManager {
       autoInject: (document.getElementById("auto-inject") as HTMLInputElement).checked,
       showActiveIndicator: (document.getElementById("show-indicator") as HTMLInputElement).checked,
       confirmSwitch: (document.getElementById("confirm-switch") as HTMLInputElement).checked,
+      personalizedBackground: (document.getElementById("personalized-background") as HTMLInputElement).checked,
     };
 
     await Storage.set({ settings: this.settings });

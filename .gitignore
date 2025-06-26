@@ -4,9 +4,6 @@ node_modules/
 # Build output
 dist/
 
-# Project files to ignore
-CLAUDE.md
-
 # Logs
 *.log
 npm-debug.log*

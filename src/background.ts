@@ -33,6 +33,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         autoInject: true,
         showActiveIndicator: true,
         confirmSwitch: true,
+        personalizedBackground: true,
       },
     });
   }
@@ -64,6 +65,11 @@ chrome.runtime.onMessage.addListener(
       if (sender.tab?.id && request.personaId) {
         registerPersonaTab(sender.tab.id, request.personaId, sender.tab.url || '');
       }
+    } else if (request.action === "OPEN_OPTIONS") {
+      chrome.runtime.openOptionsPage();
+    } else if ((request as any).action === "CREATE_NEW_CONVERSATION") {
+      // Handle confirmed new conversation creation
+      createNewPersonaConversation((request as any).personaId);
     }
     return true;
   }
@@ -107,7 +113,7 @@ async function handlePersonaSwitch(personaId: string) {
   const existingTab = await findExistingPersonaTab(personaId);
   
   if (existingTab) {
-    // Switch to existing tab
+    // Switch to existing tab - no confirmation needed
     try {
       await chrome.tabs.update(existingTab.tabId, { active: true });
       await chrome.windows.update(
@@ -124,8 +130,33 @@ async function handlePersonaSwitch(personaId: string) {
     }
   }
 
-  // No existing tab found, create a new one
-  const { settings } = await Storage.get(["settings"]);
+  // No existing tab found, will create a new one
+  // Show confirmation if enabled
+  const { settings, personas } = await Storage.get(["settings", "personas"]);
+  const persona = personas?.find((p: any) => p.id === personaId);
+  
+  if (settings?.confirmSwitch && persona) {
+    // Send message to content script to show confirmation
+    const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (activeTab?.id) {
+      chrome.tabs.sendMessage(activeTab.id, {
+        action: "CONFIRM_NEW_CONVERSATION",
+        personaName: persona.name,
+        personaId: personaId
+      });
+      return;
+    }
+  }
+
+  // Create new conversation
+  await createNewPersonaConversation(personaId, settings);
+}
+
+async function createNewPersonaConversation(personaId: string, settings?: any) {
+  if (!settings) {
+    const data = await Storage.get(["settings"]);
+    settings = data.settings;
+  }
 
   if (settings?.openInNewTab) {
     const newTab = await chrome.tabs.create({
@@ -135,6 +166,16 @@ async function handlePersonaSwitch(personaId: string) {
     
     if (newTab.id) {
       registerPersonaTab(newTab.id, personaId, "https://claude.ai/new");
+      // Set the tab persona in session storage when the tab loads
+      chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+        if (tabId === newTab.id && info.status === 'complete') {
+          chrome.tabs.sendMessage(tabId, {
+            action: "SET_TAB_PERSONA",
+            personaId: personaId
+          });
+          chrome.tabs.onUpdated.removeListener(listener);
+        }
+      });
     }
   } else {
     const [activeTab] = await chrome.tabs.query({
@@ -149,6 +190,16 @@ async function handlePersonaSwitch(personaId: string) {
       
       if (activeTab.id) {
         registerPersonaTab(activeTab.id, personaId, "https://claude.ai/new");
+        // Set the tab persona when the page loads
+        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+          if (tabId === activeTab.id && info.status === 'complete') {
+            chrome.tabs.sendMessage(tabId, {
+              action: "SET_TAB_PERSONA",
+              personaId: personaId
+            });
+            chrome.tabs.onUpdated.removeListener(listener);
+          }
+        });
       }
     } else {
       const newTab = await chrome.tabs.create({
@@ -158,6 +209,16 @@ async function handlePersonaSwitch(personaId: string) {
       
       if (newTab.id) {
         registerPersonaTab(newTab.id, personaId, "https://claude.ai/new");
+        // Set the tab persona when the tab loads
+        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+          if (tabId === newTab.id && info.status === 'complete') {
+            chrome.tabs.sendMessage(tabId, {
+              action: "SET_TAB_PERSONA",
+              personaId: personaId
+            });
+            chrome.tabs.onUpdated.removeListener(listener);
+          }
+        });
       }
     }
   }
